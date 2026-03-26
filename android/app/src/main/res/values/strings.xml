@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RoadReady</string>
+    <string name="title_activity_main">RoadReady</string>
+    <string name="package_name">com.shaquiel.roadready</string>
+    <string name="custom_url_scheme">com.shaquiel.roadready</string>
+</resources>
