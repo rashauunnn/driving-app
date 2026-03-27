@@ -1,4 +1,4 @@
-package com.shaquiel.roadready;
+package com.roadready.app;
 
 import com.getcapacitor.BridgeActivity;
 
