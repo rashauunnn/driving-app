@@ -32,18 +32,17 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      # --- NEW STEP TO GET YOUR SHA-1 ---
-      - name: Generate Signing Report
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew signingReport
-
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
+      # --- MOVE THIS TO THE END ---
+      - name: Generate Signing Report
+        run: |
+          cd android
+          ./gradlew signingReport
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
