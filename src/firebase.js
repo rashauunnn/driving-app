@@ -3,11 +3,12 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { 
   getAuth, 
   GoogleAuthProvider, 
-  signInWithRedirect, // Changed to Redirect
-  getRedirectResult,   // Added to catch the result
+  signInWithRedirect, 
+  getRedirectResult,   
   signOut,
   onAuthStateChanged 
 } from "firebase/auth";
+import { Browser } from '@capacitor/browser'; // Import the Native Browser
 
 const firebaseConfig = {
   apiKey: "AIzaSyCih-bFwaWmWYqOoBZ8HtqAHXIlb0ZUAoc",
@@ -29,15 +30,21 @@ googleProvider.setCustomParameters({
 });
 
 /**
- * Mobile-friendly Redirect Login
+ * Mobile-friendly Redirect Login using Native Browser
  */
 export const signInWithGoogle = async () => {
   try {
-    // Popup fails on Android; Redirect is the only way
-    await signInWithRedirect(auth, googleProvider);
+    // Instead of internal redirect which causes the "Initializing" loop,
+    // we force Chrome to open the Firebase Auth handler directly.
+    const authUrl = `https://roadready-c0d1a.firebaseapp.com/__/auth/handler`;
+    
+    await Browser.open({ url: authUrl });
+    
+    // Note: On Android, Browser.open starts the flow. 
+    // The redirect back is caught by the app listeners.
   } catch (error) {
-    console.error("❌ Auth Error:", error.code);
-    alert("Check your internet connection.");
+    console.error("❌ Auth Error:", error);
+    alert("Could not open the login browser.");
   }
 };
 
