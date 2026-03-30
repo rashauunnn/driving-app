@@ -29,7 +29,7 @@ export const auth = getAuth(app);
  * This must match your Web Client ID from the Google Cloud Console.
  */
 GoogleAuth.initialize({
-  clientId: '270653807978-ef3b939d91380a21b85913.apps.googleusercontent.com',
+  clientId: '270653807978-25410rs1eqsast7ipu2p4flut2rm9bvl.apps.googleusercontent.com',
   scopes: ['profile', 'email'],
   grantOfflineAccess: true,
 });
