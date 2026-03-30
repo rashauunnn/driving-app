@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "270653807978",
+    "project_id": "roadready-c0d1a",
+    "storage_bucket": "roadready-c0d1a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270653807978:android:9199c785e288e91ab85913",
+        "android_client_info": {
+          "package_name": "com.roadready.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270653807978-msnd156dl7tm5kjrdnhbmqsbba09bukh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roadready.app",
+            "certificate_hash": "b5ad9bebbd463b19e60b08578553e467ffc214ed"
+          }
+        },
+        {
+          "client_id": "270653807978-25410rs1eqsast7ipu2p4flut2rm9bvl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCMcTrK33DlIxKyonc7gdhWkvNfNtyghs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270653807978-25410rs1eqsast7ipu2p4flut2rm9bvl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,12 +3,11 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { 
   getAuth, 
   GoogleAuthProvider, 
-  signInWithRedirect, 
-  getRedirectResult,   
+  signInWithCredential, 
   signOut,
   onAuthStateChanged 
 } from "firebase/auth";
-import { Browser } from '@capacitor/browser'; // Import the Native Browser
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCih-bFwaWmWYqOoBZ8HtqAHXIlb0ZUAoc",
@@ -20,52 +19,52 @@ const firebaseConfig = {
   measurementId: "G-R841G4PNNW"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({
-  prompt: 'select_account' 
+/**
+ * 1. INITIALIZE NATIVE GOOGLE AUTH
+ * This must match your Web Client ID from the Google Cloud Console.
+ */
+GoogleAuth.initialize({
+  clientId: '270653807978-ef3b939d91380a21b85913.apps.googleusercontent.com',
+  scopes: ['profile', 'email'],
+  grantOfflineAccess: true,
 });
 
 /**
- * Mobile-friendly Redirect Login using Native Browser
+ * 2. NATIVE SIGN IN FUNCTION
+ * This replaces the Redirect/Popup method.
  */
 export const signInWithGoogle = async () => {
   try {
-    // This triggers the native Android account picker
-    const googleUser = await GoogleAuth.signIn();
+    console.log("🚀 Starting Native Sign-In...");
     
-    // Convert the token from the picker into a Firebase credential
+    // Trigger the native Android account picker
+    const googleUser = await GoogleAuth.signIn();
+    console.log("📡 Google User received:", googleUser);
+    
+    // Create the credential for Firebase
     const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
     
-    // Sign in to Firebase
+    // Sign into Firebase with the native credential
     const result = await signInWithCredential(auth, credential);
-    console.log("✅ Native Login Success:", result.user.displayName);
+    console.log("✅ Firebase Auth Success:", result.user.displayName);
+    
     return result.user;
   } catch (error) {
     console.error("❌ Native Auth Error:", error);
+    // This will help you see why it's failing in the logs
+    if (error.message) alert("Login Error: " + error.message);
   }
 };
 
-/**
- * Checks if the user just returned from a Google Login
- */
-export const checkRedirectResult = async () => {
-  try {
-    const result = await getRedirectResult(auth);
-    if (result) {
-      console.log("🔥 RoadReady Auth: Success", result.user.email);
-      return result.user;
-    }
-  } catch (error) {
-    console.error("❌ Redirect Result Error:", error);
-  }
-  return null;
+export const logout = async () => {
+  await GoogleAuth.signOut(); // Signs out of Google
+  return signOut(auth);       // Signs out of Firebase
 };
-
-export const logout = () => signOut(auth);
 
 // --- CLOUD SYNC FUNCTIONS ---
 export const saveUserProgress = async (userId, data) => {
