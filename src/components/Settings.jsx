@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'; // Added useEffect
-import { signInWithGoogle, logout, checkRedirectResult } from '../firebase'; // Added checkRedirectResult
+import React from 'react';
+import { signInWithGoogle, logout } from '../firebase';
 
 export default function Settings({
   theme,
@@ -7,30 +7,23 @@ export default function Settings({
   config,
   setConfig,
   onBack,
-  user,    
+  user,     
   setUser,
   godMode,       
   setGodMode     
 }) {
 
-  // This catches the user when they return to the app
-  useEffect(() => {
-    const handleReturn = async () => {
-      const loggedInUser = await checkRedirectResult();
+  // handleLogin now triggers the native Android account picker 
+  // instead of jumping to a mobile browser.
+  const handleLogin = async () => {
+    try {
+      const loggedInUser = await signInWithGoogle();
       if (loggedInUser) {
         setUser(loggedInUser);
       }
-    };
-    handleReturn();
-  }, [setUser]);
-
-  const handleLogin = async () => {
-    try {
-      // This will now redirect the whole app to Chrome
-      await signInWithGoogle();
     } catch (error) {
-      console.error("Authentication failed:", error.code);
-      alert("Login failed. Check your internet.");
+      console.error("Authentication failed:", error);
+      alert("Login failed. Please try again.");
     }
   };
 
