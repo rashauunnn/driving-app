@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install Dependencies
         run: npm install
 
@@ -30,6 +31,13 @@ jobs:
 
       - name: Sync Capacitor
         run: npx cap sync android
+
+      # --- NEW STEP TO GET YOUR SHA-1 ---
+      - name: Generate Signing Report
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew signingReport
 
       - name: Build APK
         run: |

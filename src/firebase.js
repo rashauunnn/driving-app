@@ -3,7 +3,8 @@ import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { 
   getAuth, 
   GoogleAuthProvider, 
-  signInWithPopup, 
+  signInWithRedirect, // Changed to Redirect
+  getRedirectResult,   // Added to catch the result
   signOut,
   onAuthStateChanged 
 } from "firebase/auth";
@@ -18,27 +19,21 @@ const firebaseConfig = {
   measurementId: "G-R841G4PNNW"
 };
 
-// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-
-// Initialize & Export Services
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-// Setup Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account' 
 });
 
 /**
- * Signs in the user using a Popup window.
+ * Mobile-friendly Redirect Login
  */
 export const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleProvider);
-    console.log("🔥 RoadReady Auth: Success", result.user.email);
-    return result.user;
+    await signInWithRedirect(auth, googleProvider);
   } catch (error) {
     console.error("❌ Auth Error:", error.code);
     throw error;
@@ -46,15 +41,24 @@ export const signInWithGoogle = async () => {
 };
 
 /**
- * Signs out the current user.
+ * Checks if the user just returned from a Google Login
  */
+export const checkRedirectResult = async () => {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result) {
+      console.log("🔥 RoadReady Auth: Success", result.user.email);
+      return result.user;
+    }
+  } catch (error) {
+    console.error("❌ Redirect Result Error:", error);
+  }
+  return null;
+};
+
 export const logout = () => signOut(auth);
 
 // --- CLOUD SYNC FUNCTIONS ---
-
-/**
- * Saves user progress to Firestore
- */
 export const saveUserProgress = async (userId, data) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -65,16 +69,11 @@ export const saveUserProgress = async (userId, data) => {
   }
 };
 
-/**
- * Retrieves user progress from Firestore
- */
 export const getUserProgress = async (userId) => {
   try {
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-      return userSnap.data();
-    }
+    if (userSnap.exists()) return userSnap.data();
   } catch (error) {
     console.error("❌ Cloud Retrieval Error:", error);
   }

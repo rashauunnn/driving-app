@@ -1,5 +1,5 @@
-import React from 'react';
-import { signInWithGoogle, logout } from '../firebase';
+import React, { useEffect } from 'react'; // Added useEffect
+import { signInWithGoogle, logout, checkRedirectResult } from '../firebase'; // Added checkRedirectResult
 
 export default function Settings({
   theme,
@@ -9,16 +9,28 @@ export default function Settings({
   onBack,
   user,    
   setUser,
-  godMode,       // <--- Add this prop
-  setGodMode     // <--- Add this prop
+  godMode,       
+  setGodMode     
 }) {
+
+  // This catches the user when they return to the app
+  useEffect(() => {
+    const handleReturn = async () => {
+      const loggedInUser = await checkRedirectResult();
+      if (loggedInUser) {
+        setUser(loggedInUser);
+      }
+    };
+    handleReturn();
+  }, [setUser]);
 
   const handleLogin = async () => {
     try {
+      // This will now redirect the whole app to Chrome
       await signInWithGoogle();
     } catch (error) {
       console.error("Authentication failed:", error.code);
-      alert("Login failed. Check your internet or browser popup settings.");
+      alert("Login failed. Check your internet.");
     }
   };
 
@@ -119,7 +131,6 @@ export default function Settings({
             />
           </div>
 
-          {/* SYSTEM OVERRIDE BUTTON */}
           <div className="logic-card override-card" style={{ border: godMode ? '1px solid #ff4444' : '1px solid var(--border-color)' }}>
             <div className="override-info">
               <span style={{ color: godMode ? '#ff4444' : 'inherit', fontWeight: 'bold' }}>System Override (God Mode)</span>
