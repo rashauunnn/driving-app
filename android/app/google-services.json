@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "270653807978-mr89r9o708q6n5q2l6f93mcg1f4jgcle.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roadready.app",
+            "certificate_hash": "5d868491077e2e96ac8b6daeb2970c82e1a01d6b"
+          }
+        },
+        {
           "client_id": "270653807978-msnd156dl7tm5kjrdnhbmqsbba09bukh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
