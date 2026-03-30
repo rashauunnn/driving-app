@@ -1,5 +1,9 @@
 {
   "appId": "com.roadready.app",
   "appName": "RoadReady",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "hostname": "roadready-c0d1a.firebaseapp.com" 
+  }
 }
