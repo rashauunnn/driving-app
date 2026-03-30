@@ -18,6 +18,14 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.roadready.app",
+            "certificate_hash": "adcc9eefa3c2fa5f66a5cd173c2d75a69f7cebbc"
+          }
+        },
+        {
+          "client_id": "270653807978-i2l8gsiteacmbrqovlq1k628p0vakvtc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roadready.app",
             "certificate_hash": "3756411e89d73e283c79c3feec9920d64fb6a759"
           }
         },
