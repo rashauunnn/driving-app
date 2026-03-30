@@ -34,10 +34,18 @@ jobs:
         run: npx cap sync android
 
       - name: Create Permanent Debug Keystore
-        # This block forces the SHA-1 to stay exactly the same for every build
+        # This creates the physical key file with fixed credentials
         run: |
           mkdir -p ~/.android
           keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Force Gradle to use Permanent Keystore
+        # This is the missing link: It tells the Android build to use the key we just made
+        run: |
+          echo "DEBUG_STORE_FILE=/home/runner/.android/debug.keystore" >> android/gradle.properties
+          echo "DEBUG_STORE_PASSWORD=android" >> android/gradle.properties
+          echo "DEBUG_KEY_ALIAS=androiddebugkey" >> android/gradle.properties
+          echo "DEBUG_KEY_PASSWORD=android" >> android/gradle.properties
 
       - name: Build APK
         run: |

@@ -46,6 +46,14 @@
           }
         },
         {
+          "client_id": "270653807978-sl3f0sa0nihfqu7j8h7g70p0hqa50n8t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roadready.app",
+            "certificate_hash": "bf5cc4348735cd93bc5fc3f67bc2f308813d3449"
+          }
+        },
+        {
           "client_id": "270653807978-25410rs1eqsast7ipu2p4flut2rm9bvl.apps.googleusercontent.com",
           "client_type": 3
         }
