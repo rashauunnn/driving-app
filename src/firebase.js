@@ -34,17 +34,18 @@ googleProvider.setCustomParameters({
  */
 export const signInWithGoogle = async () => {
   try {
-    // Instead of internal redirect which causes the "Initializing" loop,
-    // we force Chrome to open the Firebase Auth handler directly.
-    const authUrl = `https://roadready-c0d1a.firebaseapp.com/__/auth/handler`;
+    // This triggers the native Android account picker
+    const googleUser = await GoogleAuth.signIn();
     
-    await Browser.open({ url: authUrl });
+    // Convert the token from the picker into a Firebase credential
+    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
     
-    // Note: On Android, Browser.open starts the flow. 
-    // The redirect back is caught by the app listeners.
+    // Sign in to Firebase
+    const result = await signInWithCredential(auth, credential);
+    console.log("✅ Native Login Success:", result.user.displayName);
+    return result.user;
   } catch (error) {
-    console.error("❌ Auth Error:", error);
-    alert("Could not open the login browser.");
+    console.error("❌ Native Auth Error:", error);
   }
 };
 
