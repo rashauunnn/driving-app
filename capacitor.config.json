@@ -2,8 +2,13 @@
   "appId": "com.roadready.app",
   "appName": "RoadReady",
   "webDir": "dist",
+  "bundledWebRuntime": false,
   "server": {
     "androidScheme": "https",
-    "hostname": "roadready-c0d1a.firebaseapp.com" 
+    "hostname": "roadready-c0d1a.firebaseapp.com",
+    "allowNavigation": [
+      "accounts.google.com",
+      "*.firebaseapp.com"
+    ]
   }
 }

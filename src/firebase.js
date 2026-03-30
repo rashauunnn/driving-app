@@ -33,10 +33,11 @@ googleProvider.setCustomParameters({
  */
 export const signInWithGoogle = async () => {
   try {
+    // Popup fails on Android; Redirect is the only way
     await signInWithRedirect(auth, googleProvider);
   } catch (error) {
     console.error("❌ Auth Error:", error.code);
-    throw error;
+    alert("Check your internet connection.");
   }
 };
 
