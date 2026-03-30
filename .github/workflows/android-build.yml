@@ -18,7 +18,8 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        run: npm install
+        # This flag is CRITICAL to bypass the version mismatch errors
+        run: npm install --legacy-peer-deps
 
       - name: Build Web Assets
         run: npm run build
@@ -38,7 +39,6 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      # --- MOVE THIS TO THE END ---
       - name: Generate Signing Report
         run: |
           cd android
