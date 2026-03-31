@@ -18,7 +18,6 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        # This flag is CRITICAL to bypass the version mismatch errors
         run: npm install --legacy-peer-deps
 
       - name: Build Web Assets
@@ -33,32 +32,28 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Create Permanent Debug Keystore
-        # This creates the physical key file with fixed credentials
+      - name: Create THE Permanent Keystore
         run: |
-          mkdir -p ~/.android
-          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p android/app
+          keytool -genkey -v -keystore android/app/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
-      - name: Force Gradle to use Permanent Keystore
-        # This is the missing link: It tells the Android build to use the key we just made
+      - name: Capture the SHA1 Forever
         run: |
-          echo "DEBUG_STORE_FILE=/home/runner/.android/debug.keystore" >> android/gradle.properties
-          echo "DEBUG_STORE_PASSWORD=android" >> android/gradle.properties
-          echo "DEBUG_KEY_ALIAS=androiddebugkey" >> android/gradle.properties
-          echo "DEBUG_KEY_PASSWORD=android" >> android/gradle.properties
+          keytool -list -v -keystore android/app/debug.keystore -storepass android
 
-      - name: Build APK
+      - name: Build APK with This Key
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/android/app/debug.keystore -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=androiddebugkey -Pandroid.injected.signing.key.password=android
 
-      - name: Generate Signing Report
-        run: |
-          cd android
-          ./gradlew signingReport
+      - name: Upload the Keystore File (DOWNLOAD THIS)
+        uses: actions/upload-artifact@v4
+        with:
+          name: PERMANENT-KEYSTORE-FILE
+          path: android/app/debug.keystore
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RoadReady-Debug-APK
