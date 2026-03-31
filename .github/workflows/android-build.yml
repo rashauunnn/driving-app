@@ -32,26 +32,11 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Create THE Permanent Keystore
-        run: |
-          mkdir -p android/app
-          keytool -genkey -v -keystore android/app/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-
-      - name: Capture the SHA1 Forever
-        run: |
-          keytool -list -v -keystore android/app/debug.keystore -storepass android
-
-      - name: Build APK with This Key
+      - name: Build APK with Locked Keystore
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/android/app/debug.keystore -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=androiddebugkey -Pandroid.injected.signing.key.password=android
-
-      - name: Upload the Keystore File (DOWNLOAD THIS)
-        uses: actions/upload-artifact@v4
-        with:
-          name: PERMANENT-KEYSTORE-FILE
-          path: android/app/debug.keystore
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file="$GITHUB_WORKSPACE/android/app/debug.keystore" -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=androiddebugkey -Pandroid.injected.signing.key.password=android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
